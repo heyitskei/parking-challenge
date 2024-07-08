@@ -1,8 +1,9 @@
 import './App.css'
-import {useState} from "react";
+import React, {useState} from "react";
 
 function App() {
     const [screen, setScreen] = useState('welcome');
+    const [licencePlateNumber, setLicencePlateNumber] = useState('');
     const displayCheckInScreen = () => {
         setScreen('checkin');
     }
@@ -10,6 +11,16 @@ function App() {
     const displayCheckOutScreen = () => {
         setScreen('checkout');
     }
+
+    const processLicencePlateCheckIn = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLicencePlateNumber(event.target.value);
+    }
+
+    const registerCar = () => {
+        localStorage.setItem('licencePlateNumber', licencePlateNumber);
+    }
+
+    console.log(licencePlateNumber);
 
     return (
       <>
@@ -20,18 +31,18 @@ function App() {
           </div>
           {screen === 'checkin' ? (
           <div className='CheckIn'>
-          <input type='text' placeholder='Enter licence plate number' />
+          <input type='text' placeholder='Enter licence plate number' value={licencePlateNumber} onChange={processLicencePlateCheckIn} />
               <div>
-                  <button type='button' onClick={displayCheckInScreen}>Check In</button>
+                  <button type='button' onClick={registerCar}>Check In</button>
               </div>
           </div>) :
               screen === 'checkout' ? (<div className='CheckOut'>
-                  <input type='text' placeholder='Enter licence plate number'/>
-              <div>
-                  <button type='button' onClick={displayCheckInScreen}>Calculate rate</button>
-                  <button type='button' onClick={displayCheckInScreen}>Process</button>
-              </div>
-          </div>) : <div></div>
+                  <input type='text' placeholder='Enter licence plate number' value={licencePlateNumber} onChange={processLicencePlateCheckIn}/>
+                  <div>
+                      <button type='button' onClick={displayCheckInScreen}>Calculate rate</button>
+                      <button type='button' onClick={displayCheckInScreen}>Process</button>
+                  </div>
+              </div>) : <div></div>
           }
       </>
     )
