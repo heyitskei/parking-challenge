@@ -4,6 +4,8 @@ import React, {useState} from "react";
 function App() {
     const [screen, setScreen] = useState('welcome');
     const [licencePlateNumber, setLicencePlateNumber] = useState('');
+    const [garage, setGarage] = useState<string[]>([]);
+    const capacity = 3;
     const displayCheckInScreen = () => {
         setScreen('checkin');
     }
@@ -17,10 +19,18 @@ function App() {
     }
 
     const registerCar = () => {
-        localStorage.setItem('licencePlateNumber', licencePlateNumber);
+
+        if (garage.length < capacity && licencePlateNumber.length > 0)
+        {
+            setGarage([...garage, licencePlateNumber]);
+        }
+
+        localStorage.setItem('licencePlateNumbers', JSON.stringify(garage));
     }
 
     console.log(licencePlateNumber);
+    console.log(garage);
+
 
     return (
       <>
