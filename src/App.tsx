@@ -1,11 +1,18 @@
 import './App.css'
 import React, {useState} from "react";
 
+type CarInfo = {
+    licencePlateNumber: string;
+    timestamp: number;
+}
+
 function App() {
     const [screen, setScreen] = useState('welcome');
     const [licencePlateNumber, setLicencePlateNumber] = useState('');
-    const [garage, setGarage] = useState<string[]>([]);
+    const [car, setCar] = useState<CarInfo>({licencePlateNumber: '', timestamp: Date.now()});
+    const [garage, setGarage] = useState<CarInfo[]>([]);
     const [isGarageFull, setIsGarageFull] = useState(false);
+    const [cost, setCost] = useState(1);
     const capacity = 3;
     const displayCheckInScreen = () => {
         setScreen('checkin');
@@ -19,24 +26,66 @@ function App() {
         setLicencePlateNumber(event.target.value);
     }
 
+    const processLicencePlateCheckOut = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setLicencePlateNumber(event.target.value);
+    }
+
     const registerCar = () => {
+
+        //improve - no duplicate licence plate #
 
         if (garage.length < capacity && licencePlateNumber.length > 0)
         {
-            setGarage([...garage, licencePlateNumber]);
+            setCar(prevCar => ({...prevCar, licencePlateNumber: licencePlateNumber, timestamp: Date.now()}));
+            setGarage(prevGarage => [...prevGarage, car]);
         }
 
         if (garage.length === capacity)
         {
             setIsGarageFull(true);
         }
-
-        localStorage.setItem('licencePlateNumbers', JSON.stringify(garage));
     }
 
-    console.log(licencePlateNumber);
-    console.log(garage);
+    const calculateRate = () => {
 
+        const carCheckingOut = garage.find(car => car.licencePlateNumber === licencePlateNumber);
+        let timeElapsed = 0;
+
+        if (carCheckingOut) {
+            timeElapsed = (Date.now() - carCheckingOut.timestamp) / 1000;
+        }
+        else
+        {
+            return;
+        }
+
+        // 2 minutes = 120,000 milliseconds
+        // 30 sec = 30,000 milliseconds
+
+        if (timeElapsed > 30000 && timeElapsed < 60000)
+        {
+            setCost(2);
+        }
+        else if (timeElapsed > 60000 && timeElapsed < 90000)
+        {
+            setCost(3);
+        }
+        if (timeElapsed >= 120000)
+        {
+            setCost(4);
+        }
+    }
+
+    const checkoutCar = () => {
+        const carCheckingOut = garage.find(car => car.licencePlateNumber === licencePlateNumber);
+
+        if (carCheckingOut) {
+            setGarage(prevGarage => prevGarage.filter(car => car.licencePlateNumber !== carCheckingOut.licencePlateNumber));
+        }
+    }
+
+    console.log(garage);
+    console.log(cost);
 
     return (
       <>
@@ -45,20 +94,23 @@ function App() {
               <button className='checkInButton' onClick={displayCheckInScreen}>In</button>
               <button className='checkOutButton' onClick={displayCheckOutScreen}>Out</button>
           </div>
-          {screen === 'checkin' ? <div className='CheckIn'>
-          <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlateCheckIn} />
-              <div>
-                  { isGarageFull ? <div>GARAGE IS FULL</div> : ''}
-                  <button type='button' onClick={registerCar}>Check In</button>
-              </div>
-          </div> :
-              screen === 'checkout' ? <div className='CheckOut'>
-                  <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlateCheckIn}/>
+          {screen === 'checkin' ?
+              <div className='CheckIn'>
+              <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlateCheckIn} />
                   <div>
-                      <button type='button' onClick={displayCheckInScreen}>Calculate rate</button>
-                      <button type='button' onClick={displayCheckInScreen}>Process</button>
+                      { isGarageFull ? <div>GARAGE IS FULL</div> : ''}
+                      <button type='button' onClick={registerCar}>Check In</button>
                   </div>
-              </div> : <div></div>
+              </div> :
+          screen === 'checkout' ?
+              <div className='CheckOut'>
+                  <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlateCheckOut}/>
+                  <div>
+                      { cost ? <div>YOUR TOTAL IS: {cost}</div> : ''}
+                      <button type='button' onClick={calculateRate}>Calculate rate</button>
+                      <button type='button' onClick={checkoutCar}>Process</button>
+                  </div>
+              </div> : ''
           }
       </>
     )
