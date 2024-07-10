@@ -21,11 +21,7 @@ function App() {
         setScreen('checkout');
     }
 
-    const processLicencePlateCheckIn = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setLicencePlateNumber(event.target.value);
-    }
-
-    const processLicencePlateCheckOut = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const processLicencePlate = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLicencePlateNumber(event.target.value);
     }
 
@@ -44,6 +40,8 @@ function App() {
         {
             setIsGarageFull(true);
         }
+
+        setLicencePlateNumber('');
     }
 
     const calculateRate = () => {
@@ -81,6 +79,7 @@ function App() {
 
         if (carCheckingOut) {
             setGarage(prevGarage => prevGarage.filter(car => car.licencePlateNumber !== carCheckingOut.licencePlateNumber));
+            setLicencePlateNumber('');
         }
     }
 
@@ -96,7 +95,7 @@ function App() {
           </div>
           {screen === 'checkin' ?
               <div className='CheckIn'>
-              <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlateCheckIn} />
+              <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate} />
                   <div>
                       { isGarageFull ? <div>GARAGE IS FULL</div> : ''}
                       <button type='button' onClick={registerCar}>Check In</button>
@@ -104,7 +103,7 @@ function App() {
               </div> :
           screen === 'checkout' ?
               <div className='CheckOut'>
-                  <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlateCheckOut}/>
+                  <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate}/>
                   <div>
                       { cost ? <div>YOUR TOTAL IS: {cost}</div> : ''}
                       <button type='button' onClick={calculateRate}>Calculate rate</button>
