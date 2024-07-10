@@ -9,7 +9,6 @@ type CarInfo = {
 function App() {
     const [screen, setScreen] = useState('welcome');
     const [licencePlateNumber, setLicencePlateNumber] = useState('');
-    const [car, setCar] = useState<CarInfo>({licencePlateNumber: '', timestamp: Date.now()});
     const [garage, setGarage] = useState<CarInfo[]>([]);
     const [isGarageFull, setIsGarageFull] = useState(false);
     const [cost, setCost] = useState(1);
@@ -32,12 +31,13 @@ function App() {
 
     const registerCar = () => {
 
+        // debugger;
         //improve - no duplicate licence plate #
 
         if (garage.length < capacity && licencePlateNumber.length > 0)
         {
-            setCar(prevCar => ({...prevCar, licencePlateNumber: licencePlateNumber, timestamp: Date.now()}));
-            setGarage(prevGarage => [...prevGarage, car]);
+            const newCar: CarInfo = { licencePlateNumber, timestamp: Date.now() };
+            setGarage(prevGarage => [...prevGarage, newCar]);
         }
 
         if (garage.length === capacity)
@@ -62,15 +62,15 @@ function App() {
         // 2 minutes = 120,000 milliseconds
         // 30 sec = 30,000 milliseconds
 
-        if (timeElapsed > 30000 && timeElapsed < 60000)
+        if (timeElapsed > 30 && timeElapsed < 60)
         {
             setCost(2);
         }
-        else if (timeElapsed > 60000 && timeElapsed < 90000)
+        else if (timeElapsed > 60 && timeElapsed < 90)
         {
             setCost(3);
         }
-        if (timeElapsed >= 120000)
+        if (timeElapsed >= 120)
         {
             setCost(4);
         }
