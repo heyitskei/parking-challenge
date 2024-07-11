@@ -11,7 +11,7 @@ function App() {
     const [licencePlateNumber, setLicencePlateNumber] = useState('');
     const [garage, setGarage] = useState<CarInfo[]>([]);
     const [isGarageFull, setIsGarageFull] = useState(false);
-    const [cost, setCost] = useState(1);
+    const [cost, setCost] = useState(0);
     const capacity = 3;
     const displayCheckInScreen = () => {
         setScreen('checkin');
@@ -56,7 +56,11 @@ function App() {
             return;
         }
 
-        if (timeElapsed > 30 && timeElapsed < 60)
+        if (timeElapsed > 0 && timeElapsed < 30)
+        {
+            setCost(1);
+        }
+        else if (timeElapsed > 30 && timeElapsed < 60)
         {
             setCost(2);
         }
@@ -64,7 +68,7 @@ function App() {
         {
             setCost(3);
         }
-        if (timeElapsed >= 120)
+        else
         {
             setCost(4);
         }
