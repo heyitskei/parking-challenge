@@ -5,3 +5,13 @@
   text-align: center;
 }
 
+.margin-10 {
+  margin: 10px;
+}
+
+.button-margin {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+
