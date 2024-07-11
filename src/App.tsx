@@ -98,7 +98,8 @@ function App() {
                   </div>
               </div> :
           screen === 'checkout' ?
-              <div className='CheckOut'>
+              <div className='margin-10'>
+                  <div className='margin-10'>Currently in: {garage.map(car => car.licencePlateNumber + ` | `)}</div>
                   <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate}/>
                   <div className='margin-10'>
                       { cost && licencePlateNumber ? <div className='margin-10'>Your total is: {cost}</div> : ''}
