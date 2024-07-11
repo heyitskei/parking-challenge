@@ -13,23 +13,31 @@ function App() {
     const [isGarageFull, setIsGarageFull] = useState(false);
     const [isRateCalculated, setIsRateCalculated] = useState(false);
     const [cost, setCost] = useState(0);
+    const [errorMessage, setErrorMessage] = useState('');
     const capacity = 3;
     const displayCheckInScreen = () => {
         setScreen('checkin');
+        setErrorMessage('');
     }
 
     const displayCheckOutScreen = () => {
         setScreen('checkout');
+        setErrorMessage('');
     }
 
     const processLicencePlate = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLicencePlateNumber(event.target.value);
         setIsRateCalculated(false);
+        setErrorMessage('');
     }
 
     const registerCar = () => {
 
-        //improve - no duplicate licence plate #
+        if (garage.find(car => car.licencePlateNumber === licencePlateNumber))
+        {
+            setErrorMessage('A car with this licence plate number is already checked in.');
+            return;
+        }
 
         if (garage.length < capacity && licencePlateNumber.length > 0)
         {
@@ -48,15 +56,13 @@ function App() {
     const calculateRate = () => {
 
         const carCheckingOut = garage.find(car => car.licencePlateNumber === licencePlateNumber);
-        let timeElapsed = 0;
 
-        if (carCheckingOut) {
-            timeElapsed = (Date.now() - carCheckingOut.timestamp) / 1000;
-        }
-        else
+        if (!carCheckingOut)
         {
             return;
         }
+
+        const timeElapsed = (Date.now() - carCheckingOut.timestamp) / 1000;
 
         if (timeElapsed > 0 && timeElapsed < 30)
         {
@@ -87,6 +93,10 @@ function App() {
             setCost(0);
             setIsGarageFull(false);
         }
+        else
+        {
+            setErrorMessage('Cannot check out a car that was not checked in.');
+        }
     }
 
     console.log(garage);
@@ -103,7 +113,8 @@ function App() {
               <div className='margin-10'>
               <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate} />
                   <div className='margin-10'>
-                      { isGarageFull ? <div className='margin-10'>Garage is full, send them away.</div> : ''}
+                      { isGarageFull && <div className='margin-10'>Garage is full, send them away.</div>}
+                      {errorMessage && <div className='margin-10'>{errorMessage}</div>}
                       <button className='button-margin' type='button' onClick={registerCar}>Check In</button>
                   </div>
               </div> :
