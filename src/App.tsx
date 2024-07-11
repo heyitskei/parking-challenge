@@ -11,6 +11,7 @@ function App() {
     const [licencePlateNumber, setLicencePlateNumber] = useState('');
     const [garage, setGarage] = useState<CarInfo[]>([]);
     const [isGarageFull, setIsGarageFull] = useState(false);
+    const [isRateCalculated, setIsRateCalculated] = useState(false);
     const [cost, setCost] = useState(0);
     const capacity = 3;
     const displayCheckInScreen = () => {
@@ -23,6 +24,7 @@ function App() {
 
     const processLicencePlate = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLicencePlateNumber(event.target.value);
+        setIsRateCalculated(false);
     }
 
     const registerCar = () => {
@@ -72,6 +74,8 @@ function App() {
         {
             setCost(4);
         }
+
+        setIsRateCalculated(true);
     }
 
     const checkoutCar = () => {
@@ -110,7 +114,7 @@ function App() {
                   <div className='margin-10'>
                       { cost && licencePlateNumber ? <div className='margin-10'>Customer's total is: {cost}</div> : ''}
                       <button className='button-margin' type='button' onClick={calculateRate}>Calculate rate</button>
-                      <button className='button-margin' type='button' onClick={checkoutCar}>Process</button>
+                      <button className='button-margin' type='button' onClick={checkoutCar} disabled={!isRateCalculated}>Process</button>
                   </div>
               </div> : ''
           }
