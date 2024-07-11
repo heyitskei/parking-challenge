@@ -80,6 +80,8 @@ function App() {
         if (carCheckingOut) {
             setGarage(prevGarage => prevGarage.filter(car => car.licencePlateNumber !== carCheckingOut.licencePlateNumber));
             setLicencePlateNumber('');
+            setCost(0);
+            setIsGarageFull(false);
         }
     }
 
@@ -97,7 +99,7 @@ function App() {
               <div className='margin-10'>
               <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate} />
                   <div className='margin-10'>
-                      { isGarageFull ? <div className='margin-10'>Sorry, we are at capacity, please come again later.</div> : ''}
+                      { isGarageFull ? <div className='margin-10'>Garage is full, send them away.</div> : ''}
                       <button className='button-margin' type='button' onClick={registerCar}>Check In</button>
                   </div>
               </div> :
@@ -106,7 +108,7 @@ function App() {
                   <div className='margin-10'>Currently in: {garage.map(car => car.licencePlateNumber + ` | `)}</div>
                   <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate}/>
                   <div className='margin-10'>
-                      { cost && licencePlateNumber ? <div className='margin-10'>Your total is: {cost}</div> : ''}
+                      { cost && licencePlateNumber ? <div className='margin-10'>Customer's total is: {cost}</div> : ''}
                       <button className='button-margin' type='button' onClick={calculateRate}>Calculate rate</button>
                       <button className='button-margin' type='button' onClick={checkoutCar}>Process</button>
                   </div>
