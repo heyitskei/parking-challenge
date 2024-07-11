@@ -27,7 +27,6 @@ function App() {
 
     const registerCar = () => {
 
-        // debugger;
         //improve - no duplicate licence plate #
 
         if (garage.length < capacity && licencePlateNumber.length > 0)
@@ -57,9 +56,6 @@ function App() {
             return;
         }
 
-        // 2 minutes = 120,000 milliseconds
-        // 30 sec = 30,000 milliseconds
-
         if (timeElapsed > 30 && timeElapsed < 60)
         {
             setCost(2);
@@ -84,30 +80,30 @@ function App() {
     }
 
     console.log(garage);
-    console.log(cost);
 
     return (
       <>
           <h1>Welcome</h1>
-          <div className='App'>
-              <button className='checkInButton' onClick={displayCheckInScreen}>In</button>
-              <button className='checkOutButton' onClick={displayCheckOutScreen}>Out</button>
+          <p>The current capacity is: {capacity-garage.length}</p>
+          <div className='margin-10'>
+              <button className='button-margin' onClick={displayCheckInScreen}>In</button>
+              <button className='button-margin' onClick={displayCheckOutScreen}>Out</button>
           </div>
           {screen === 'checkin' ?
-              <div className='CheckIn'>
+              <div className='margin-10'>
               <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate} />
-                  <div>
-                      { isGarageFull ? <div>GARAGE IS FULL</div> : ''}
-                      <button type='button' onClick={registerCar}>Check In</button>
+                  <div className='margin-10'>
+                      { isGarageFull ? <div className='margin-10'>Sorry, we are at capacity, please come again later.</div> : ''}
+                      <button className='button-margin' type='button' onClick={registerCar}>Check In</button>
                   </div>
               </div> :
           screen === 'checkout' ?
               <div className='CheckOut'>
                   <input type='text' placeholder='Enter licence plate #' value={licencePlateNumber} onChange={processLicencePlate}/>
-                  <div>
-                      { cost ? <div>YOUR TOTAL IS: {cost}</div> : ''}
-                      <button type='button' onClick={calculateRate}>Calculate rate</button>
-                      <button type='button' onClick={checkoutCar}>Process</button>
+                  <div className='margin-10'>
+                      { cost && licencePlateNumber ? <div className='margin-10'>Your total is: {cost}</div> : ''}
+                      <button className='button-margin' type='button' onClick={calculateRate}>Calculate rate</button>
+                      <button className='button-margin' type='button' onClick={checkoutCar}>Process</button>
                   </div>
               </div> : ''
           }
