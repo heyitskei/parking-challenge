@@ -18,11 +18,13 @@ function App() {
     const displayCheckInScreen = () => {
         setScreen('checkin');
         setErrorMessage('');
+        setLicencePlateNumber('');
     }
 
     const displayCheckOutScreen = () => {
         setScreen('checkout');
         setErrorMessage('');
+        setLicencePlateNumber('');
     }
 
     const processLicencePlate = (event: React.ChangeEvent<HTMLInputElement>) => {
